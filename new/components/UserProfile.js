@@ -1,0 +1,1 @@
+// Shows user profile info and avatar
