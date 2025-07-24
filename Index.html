@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plate Check</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Plate Check</h1>
+  </header>
+
+  <!-- Auth Section -->
+  <section id="auth">
+    <input id="email" type="email" placeholder="Email" autocomplete="username" />
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="signIn()">Sign In</button>
+  </section>
+
+  <!-- User Info Section -->
+  <section id="user-info" style="display:none;">
+    <img id="profile-pic" src="" alt="Profile Picture" />
+    <div><strong id="username"></strong></div>
+    <input type="file" id="upload-photo" accept="image/*" />
+    <button onclick="uploadPhoto()">Upload Photo</button>
+    <input type="text" id="new-username" placeholder="Change Username" />
+    <button onclick="updateUsername()">Update Username</button>
+    <button onclick="signOut()">Sign Out</button>
+  </section>
+
+  <!-- License Plate Search Form -->
+  <section id="plate-form">
+    <input id="plate-input" type="text" placeholder="Enter License Plate" maxlength="10" />
+    <input id="state-input" type="text" placeholder="Enter State (e.g. TX)" maxlength="2" />
+    <button onclick="searchPlate()">Search Vehicle</button>
+
+    <div id="plate-info" style="display:none;">
+      <img id="vehicle-photo" src="" alt="Vehicle Image" />
+      <div id="vehicle-details"></div>
+
+      <div id="vote-buttons">
+        <button onclick="vote('like')">👍 Like</button>
+        <button onclick="vote('dislike')">👎 Dislike</button>
+        <div id="vote-counts">Likes: 0 | Dislikes: 0</div>
+      </div>
+
+      <div id="comments-section">
+        <div id="comments-list"></div>
+        <form id="comment-form" onsubmit="submitComment(event)">
+          <textarea id="comment-text" placeholder="Leave a comment..." required></textarea>
+          <button type="submit">Post Comment</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script>
+    // Variables to hold current search
+    let currentPlate = '';
+    let currentState = '';
+
+    // Triggered when clicking "Search Vehicle"
+    async function searchPlate() {
+      const plate = document.getElementById('plate-input').value.trim().toUpperCase();
+      const state = document.getElementById('state-input').value.trim().toUpperCase();
+
+      if (!plate || !state || state.length !== 2) {
+        alert('Please enter a valid license plate and 2-letter state code.');
+        return;
+      }
+
+      currentPlate = plate;
+      currentState = state;
+
+      // TODO: Fetch vehicle info from your API or NHTSA here
+      // For now, show dummy info & image:
+      document.getElementById('vehicle-photo').src = 'https://via.placeholder.com/200x120?text=Vehicle+Image';
+      document.getElementById('vehicle-details').innerHTML = `<strong>License Plate:</strong> ${plate} <br> <strong>State:</strong> ${state} <br> <em>Vehicle info loading...</em>`;
+
+      document.getElementById('plate-info').style.display = 'block';
+
+      // Load votes and comments for this plate/state
+      await loadVotes();
+      await loadComments();
+    }
+
+    async function vote(type) {
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) {
+        alert('Please sign in to vote.');
+        return;
+      }
+      if (!currentPlate || !currentState) {
+        alert('Please search a license plate first.');
+        return;
+      }
+      await addVote(user.data.user.id, currentPlate, currentState, type);
+      await loadVotes();
+    }
+
+    async function loadVotes() {
+      if (!currentPlate || !currentState) return;
+      const counts = await getVoteCounts(currentPlate, currentState);
+      document.getElementById('vote-counts').textContent = `Likes: ${counts.likes} | Dislikes: ${counts.dislikes}`;
+    }
+
+    async function submitComment(e) {
+      e.preventDefault();
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) {
+        alert('Please sign in to comment.');
+        return;
+      }
+      if (!currentPlate || !currentState) {
+        alert('Please search a license plate first.');
+        return;
+      }
+      const commentText = document.getElementById('comment-text').value.trim();
+      if (!commentText) return;
+      await addComment(user.data.user.id, currentPlate, currentState, commentText);
+      document.getElementById('comment-text').value = '';
+      await loadComments();
+    }
+
+    async function loadComments() {
+      if (!currentPlate || !currentState) return;
+      const comments = await getCommentsWithProfiles(currentPlate, currentState);
+      const list = document.getElementById('comments-list');
+      list.innerHTML = '';
+      if (comments.length === 0) {
+        list.innerHTML = '<p>No comments yet. Be the first!</p>';
+        return;
+      }
+      comments.forEach(c => {
+        const avatar = c.profiles.avatar_url || `https://robohash.org/${c.profiles.default_animal}.png?size=40x40`;
+        const div = document.createElement('div');
+        div.className = 'comment';
+        div.innerHTML = `
+          <img src="${avatar}" alt="${c.profiles.username} avatar" />
+          <div class="comment-content">
+            <div class="comment-username">${c.profiles.username}</div>
+            <div class="comment-text">${escapeHtml(c.comment_text)}</div>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // Simple HTML escape to prevent XSS in comments
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function(m) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+      });
+    }
+  </script>
+</body>
+</html>

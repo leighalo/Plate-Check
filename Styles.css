@@ -1,0 +1,193 @@
+/* Reset and base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  background-color: #0a0a0a;
+  color: #eee;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  text-align: center;
+  border-bottom: 2px solid #00f2ff;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 10px #00f2ff;
+}
+
+h1 {
+  color: #00f2ff;
+  text-shadow: 0 0 8px #00f2ff;
+  margin: 0;
+}
+
+/* Containers */
+#auth, #user-info, #plate-form, #comments-section {
+  max-width: 600px;
+  margin: 1rem auto;
+  background: #111;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00f2ff;
+}
+
+/* Inputs and buttons */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  border: none;
+  background: #222;
+  color: #eee;
+  font-size: 1rem;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+button {
+  width: 100%;
+  background-color: #00f2ff;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 12px #00f2ff;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0099cc;
+}
+
+/* User info */
+#user-info img, .comment img {
+  display: block;
+  margin: 0 auto 1rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #00f2ff;
+  box-shadow: 0 0 10px #00f2ff;
+}
+
+#user-info div strong {
+  display: block;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #00f2ff;
+}
+
+/* Vehicle info */
+#plate-info {
+  margin-top: 1rem;
+  background: #222;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00f2ff inset;
+  color: #ddd;
+  text-align: center;
+}
+
+#plate-info img {
+  max-width: 200px;
+  margin: 0 auto 1rem;
+}
+
+/* Voting buttons */
+#vote-buttons {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+#vote-buttons button {
+  margin: 0 1rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  color: #000;
+  background-color: #00f2ff;
+  box-shadow: 0 0 12px #00f2ff;
+  transition: background-color 0.3s ease;
+}
+
+#vote-buttons button:hover {
+  background-color: #0099cc;
+}
+
+#vote-counts {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  color: #00f2ff;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Comments */
+#comments-list {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.comment {
+  border-bottom: 1px solid #222;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.comment img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #00f2ff;
+  margin-right: 0.75rem;
+  box-shadow: 0 0 6px #00f2ff;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  flex-grow: 1;
+}
+
+.comment-username {
+  color: #00f2ff;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.comment-text {
+  white-space: pre-wrap;
+}
+
+/* Scrollbar for comments */
+#comments-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+#comments-list::-webkit-scrollbar-track {
+  background: #111;
+}
+
+#comments-list::-webkit-scrollbar-thumb {
+  background: #00f2ff;
+  border-radius: 4px;
+}
