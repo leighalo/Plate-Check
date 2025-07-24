@@ -1,0 +1,1 @@
+// JavaScript placeholder for auth, voting, comments
