@@ -1,0 +1,42 @@
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+header {
+  text-align: center;
+}
+form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+}
+.hidden {
+  display: none;
+}
+#results {
+  text-align: center;
+  margin-top: 20px;
+}
+#ad {
+  margin: 20px 0;
+}
+.ad {
+  background: #ddd;
+  text-align: center;
+  padding: 10px;
+  margin: 10px 0;
+}
+#ad-sidebar {
+  float: right;
+  width: 200px;
+}
+#ad-feed {
+  margin-top: 20px;
+}
