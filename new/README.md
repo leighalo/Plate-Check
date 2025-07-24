@@ -1,1 +1,0 @@
-# Plate Check App README

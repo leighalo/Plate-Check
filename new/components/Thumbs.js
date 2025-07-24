@@ -1,1 +1,0 @@
-// Voting thumbs up/down component
